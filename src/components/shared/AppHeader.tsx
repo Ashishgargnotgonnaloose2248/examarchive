@@ -12,11 +12,12 @@ import { ThemeToggle } from './ThemeToggle';
 
 const CollegeLogo = () => (
   <Image
-    src="/MITS-LOGO.png" // This path assumes your logo is directly in the 'public' folder
+    src="/MITS LOGO PNG.png" // Updated to the correct filename
     alt="Exam Archive College Logo"
     width={32} // Set the desired width
     height={32} // Set the desired height
     className="h-8 w-8" // Tailwind classes for sizing
+    unoptimized={true} // Added in case there are issues with optimization and spaces
   />
 );
 
