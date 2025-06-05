@@ -2,6 +2,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image'; // Added import for Next.js Image component
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMockAuth } from '@/hooks/useMockAuth';
@@ -10,29 +11,13 @@ import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from './ThemeToggle';
 
 const CollegeLogo = () => (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 40 40"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-8 w-8 text-primary" 
-    aria-label="College Logo"
-  >
-    <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2.5" />
-    <text
-      x="50%"
-      y="50%"
-      dominantBaseline="central"
-      textAnchor="middle"
-      fontFamily="Inter, sans-serif"
-      fontSize="16"
-      fontWeight="bold"
-      fill="currentColor"
-    >
-      EA
-    </text>
-  </svg>
+  <Image
+    src="/MITS-LOGO.png" // Path to your logo in the public directory
+    alt="Exam Archive College Logo"
+    width={32} // Set the desired width
+    height={32} // Set the desired height
+    className="h-8 w-8" // Tailwind classes for sizing, can be adjusted
+  />
 );
 
 export function AppHeader() {
