@@ -27,7 +27,7 @@ export function AppHeader() {
         <Link href="/dashboard" className="flex items-center gap-2">
           <GraduationCap className="h-8 w-8 text-primary" />
           <span className="text-xl font-bold text-foreground font-headline">
-            Academia Archive
+            Exam Archive
           </span>
         </Link>
         <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
