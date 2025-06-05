@@ -8,10 +8,10 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <GraduationCap className="mx-auto h-16 w-16 text-primary" />
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground font-headline">
-            Academia Archive
+            Exam Archive
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Access previous year question papers with your college ID.
+          All Your Previous Year Papers in One Place
           </p>
         </div>
         <LoginForm />
