@@ -2,11 +2,12 @@
 "use client";
 
 import Link from 'next/link';
-import { LogOut } from 'lucide-react'; // GraduationCap removed as it's replaced by SVG
+import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMockAuth } from '@/hooks/useMockAuth';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
+import { ThemeToggle } from './ThemeToggle';
 
 const CollegeLogo = () => (
   <svg
@@ -15,7 +16,7 @@ const CollegeLogo = () => (
     viewBox="0 0 40 40"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className="h-8 w-8 text-primary" // Ensures size and color match previous icon
+    className="h-8 w-8 text-primary" 
     aria-label="College Logo"
   >
     <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2.5" />
@@ -57,9 +58,12 @@ export function AppHeader() {
             Exam Archive
           </span>
         </Link>
-        <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
-          <LogOut className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
+            <LogOut className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </header>
   );

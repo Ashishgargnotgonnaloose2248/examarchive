@@ -5,6 +5,58 @@
 
 @layer base {
   :root {
+    /* Light Theme Variables */
+    --background: 0 0% 100%; /* White */
+    --foreground: 220 10% 10%; /* Dark Gray */
+
+    --muted: 220 15% 95%; /* Very Light Gray */
+    --muted-foreground: 220 10% 45%; /* Mid Gray */
+
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 220 10% 10%; /* Dark Gray */
+
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 220 10% 10%; /* Dark Gray */
+
+    --border: 220 15% 85%; /* Light Gray Border */
+    --input: 220 15% 90%; /* Light Gray Input Background */
+
+    --primary: 214 100% 50%; /* Dark Blue #006FFD */
+    --primary-foreground: 0 0% 100%; /* White */
+
+    --secondary: 220 25% 55%; /* Muted Mid-Blue */
+    --secondary-foreground: 0 0% 100%; /* White */
+
+    --accent: 200 80% 60%; /* Bright Cyan/Light Blue */
+    --accent-foreground: 200 30% 10%; /* Dark for contrast on lighter accent */
+
+    --destructive: 0 72% 51%; /* Vibrant red for destructive actions */
+    --destructive-foreground: 0 0% 100%; /* White */
+
+    --ring: 214 100% 55%; /* Primary blue for focus rings, slightly lighter */
+
+    --radius: 0.5rem;
+
+    /* Chart colors - Light Theme */
+    --chart-1: 214 80% 60%;
+    --chart-2: 200 70% 50%;
+    --chart-3: 220 50% 70%;
+    --chart-4: 180 60% 45%;
+    --chart-5: 240 40% 65%;
+    
+    /* Sidebar colors - Light Theme */
+    --sidebar-background: 220 15% 97%; /* Off-white / Very Light Gray */
+    --sidebar-foreground: 220 10% 20%; /* Dark Gray text */
+    --sidebar-primary: 214 100% 50%; /* Main primary blue */
+    --sidebar-primary-foreground: 0 0% 100%; /* White */
+    --sidebar-accent: 200 80% 60%; /* Main accent */
+    --sidebar-accent-foreground: 200 30% 10%; /* Dark */
+    --sidebar-border: 220 15% 88%; /* Light Gray border for sidebar */
+    --sidebar-ring: 214 100% 55%; /* Primary color for sidebar ring */
+  }
+
+  .dark {
+    /* Dark Theme Variables (User's preferred) */
     --background: 220 15% 10%; /* Very Dark Desaturated Blue-Gray */
     --foreground: 220 10% 90%; /* Light Cool Gray */
 
@@ -33,76 +85,23 @@
     --destructive-foreground: 0 0% 100%; /* White */
 
     --ring: 214 100% 55%; /* Primary blue for focus rings, slightly lighter */
-
-    --radius: 0.5rem;
-
-    /* Chart colors - Adjusted for new dark theme */
-    --chart-1: 214 80% 60%; /* Brighter version of primary */
-    --chart-2: 200 70% 50%; /* Similar to accent */
-    --chart-3: 220 50% 70%; /* Lighter secondary */
-    --chart-4: 180 60% 45%; /* A teal/cyan */
-    --chart-5: 240 40% 65%; /* A muted purple/blue for variety */
     
-    /* Sidebar colors */
-    --sidebar-background: 220 15% 18%; /* Dark Gray for sidebar, harmonious with cards */
+    /* Chart colors - Dark Theme */
+    --chart-1: 214 80% 60%;
+    --chart-2: 200 70% 50%;
+    --chart-3: 220 50% 70%;
+    --chart-4: 180 60% 45%;
+    --chart-5: 240 40% 65%;
+    
+    /* Sidebar colors - Dark Theme */
+    --sidebar-background: 220 15% 18%; /* Dark Gray for sidebar */
     --sidebar-foreground: 220 10% 85%; /* Light Gray text for sidebar */
-    --sidebar-primary: 214 100% 50%; /* Main primary blue for highlights */
+    --sidebar-primary: 214 100% 50%; /* Main primary blue */
     --sidebar-primary-foreground: 0 0% 100%; /* White */
-    --sidebar-accent: 200 80% 60%; /* Main accent for highlights */
+    --sidebar-accent: 200 80% 60%; /* Main accent */
     --sidebar-accent-foreground: 200 30% 10%; /* Dark */
     --sidebar-border: 220 15% 22%; /* Darker gray for sidebar border */
     --sidebar-ring: 214 100% 55%; /* Primary color for sidebar ring */
-  }
-
-  .dark {
-    /* This is an alternative dark theme, keeping the structure. 
-       It could be identical to :root if only one dark theme is desired,
-       or offer a variation. For now, let's make it a slightly different dark variant. */
-    --background: 245 20% 8%; /* Deeper Dark blue/purple */
-    --foreground: 240 30% 92%; /* Slightly brighter Light cool gray */
-
-    --muted: 245 15% 18%; 
-    --muted-foreground: 240 20% 68%;
-
-    --popover: 245 18% 10%;
-    --popover-foreground: 240 30% 92%;
-
-    --card: 245 18% 10%;
-    --card-foreground: 240 30% 92%;
-
-    --border: 245 15% 28%;
-    --input: 245 15% 20%;
-
-    --primary: 210 90% 55%; /* Slightly different blue */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 230 60% 50%;
-    --secondary-foreground: 230 40% 90%;
-
-    --accent: 190 80% 55%; /* Different shade of cyan/teal */
-    --accent-foreground: 190 40% 10%;
-
-    --destructive: 0 63% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --ring: 210 90% 55%; 
-    
-    /* Chart colors - dark theme variant */
-    --chart-1: 210 70% 60%;
-    --chart-2: 190 65% 65%;
-    --chart-3: 230 80% 65%;
-    --chart-4: 170 60% 70%;
-    --chart-5: 250 70% 60%;
-
-    /* Sidebar colors - dark theme variant */
-    --sidebar-background: 245 18% 13%; 
-    --sidebar-foreground: 240 30% 88%; 
-    --sidebar-primary: 210 90% 55%; 
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 190 80% 55%; 
-    --sidebar-accent-foreground: 190 40% 10%;
-    --sidebar-border: 245 15% 28%;
-    --sidebar-ring: 210 90% 55%;
   }
 }
 
@@ -112,10 +111,16 @@
   }
   body {
     @apply text-foreground;
-    background-color: hsl(var(--background)); /* Uses the new dark neutral from :root */
-    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='5' cy='5' r='0.5' fill='hsla(0,0%25,100%25,0.05)'/%3E%3Ccircle cx='15' cy='15' r='0.5' fill='hsla(0,0%25,100%25,0.05)'/%3E%3Ccircle cx='25' cy='25' r='0.5' fill='hsla(0,0%25,100%25,0.05)'/%3E%3C/svg%3E"); /* Subtle white dot pattern */
+    background-color: hsl(var(--background));
+    /* Subtle dark dots for light theme */
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='5' cy='5' r='0.5' fill='rgba(0,0,0,0.04)'/%3E%3Ccircle cx='15' cy='15' r='0.5' fill='rgba(0,0,0,0.04)'/%3E%3Ccircle cx='25' cy='25' r='0.5' fill='rgba(0,0,0,0.04)'/%3E%3C/svg%3E");
     background-size: 30px 30px; 
     background-attachment: fixed;
     background-repeat: repeat;
+  }
+
+  html.dark body {
+    /* Subtle white dot pattern for dark theme */
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='5' cy='5' r='0.5' fill='hsla(0,0%25,100%25,0.05)'/%3E%3Ccircle cx='15' cy='15' r='0.5' fill='hsla(0,0%25,100%25,0.05)'/%3E%3Ccircle cx='25' cy='25' r='0.5' fill='hsla(0,0%25,100%25,0.05)'/%3E%3C/svg%3E");
   }
 }
