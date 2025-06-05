@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import Image from 'next/image'; // Added import for Next.js Image component
+import Image from 'next/image';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMockAuth } from '@/hooks/useMockAuth';
@@ -12,11 +12,11 @@ import { ThemeToggle } from './ThemeToggle';
 
 const CollegeLogo = () => (
   <Image
-    src="/MITS-LOGO.png" // Path to your logo in the public directory
+    src="/MITS-LOGO.png" // This path assumes your logo is directly in the 'public' folder
     alt="Exam Archive College Logo"
     width={32} // Set the desired width
     height={32} // Set the desired height
-    className="h-8 w-8" // Tailwind classes for sizing, can be adjusted
+    className="h-8 w-8" // Tailwind classes for sizing
   />
 );
 
