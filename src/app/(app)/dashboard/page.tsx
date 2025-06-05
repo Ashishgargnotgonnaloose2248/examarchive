@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { PaperFilters } from '@/components/dashboard/PaperFilters';
 import { PaperList } from '@/components/dashboard/PaperList';
 import { PAPERS, DEPARTMENTS, SUBJECTS, YEARS } from '@/lib/constants';
@@ -14,9 +15,9 @@ export default function DashboardPage() {
     year: undefined,
   });
 
-  const handleFilterChange = (newFilters: Filters) => {
+  const handleFilterChange = useCallback((newFilters: Filters) => {
     setFilters(newFilters);
-  };
+  }, []); // setFilters is stable, so empty dependency array is fine
 
   const filteredPapers = useMemo(() => {
     return PAPERS.filter((paper) => {
