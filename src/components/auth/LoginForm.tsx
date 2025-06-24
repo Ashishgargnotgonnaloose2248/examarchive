@@ -1,141 +1,160 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type FieldValues } from "react-hook-form";
-import * as z from "zod";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mail, Loader2, User } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { Loader2, Mail, User as UserIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useMockAuth } from "@/hooks/useMockAuth";
-import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
-// Validation schemas for login and signup
+/* ─────────────────── validation ─────────────────── */
 const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address." }).refine(
-    (email) => email.toLowerCase().endsWith("@mitsgwl.ac.in"),
-    { message: "Please use your college Email address." }
-  ),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z
+    .string()
+    .email()
+    .refine(e => e.toLowerCase().endsWith("@mitsgwl.ac.in"), {
+      message: "College email required",
+    }),
+  password: z.string().min(1),
 });
 
-const signupSchema = z
-  .object({
-    username: z.string().min(3, "Username must be at least 3 characters"),
-    email: z.string().email({ message: "Invalid email address." }).refine(
-      (email) => email.toLowerCase().endsWith("@mitsgwl.ac.in"),
-      { message: "Please use your college Email address." }
-    ),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+const signupSchema = loginSchema.extend({
+  fullName: z
+    .string()
+    .min(3)
+    .regex(/^[a-zA-Z\s'-]+$/, "Only letters, spaces, hyphens, apostrophes"),
+  confirmPassword: z.string(),
+}).refine(d => d.password === d.confirmPassword, {
+  path: ["confirmPassword"],
+  message: "Passwords do not match",
+});
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-type SignupFormValues = z.infer<typeof signupSchema>;
+type LoginVals = z.infer<typeof loginSchema>;
+type SignupVals = z.infer<typeof signupSchema>;
 
 export function LoginForm() {
-  const router = useRouter();
-  const { login, signup } = useMockAuth();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false);
+  const router = useRouter();
 
-  const form = useForm<LoginFormValues | SignupFormValues>({
+  const [isNewUser, setIsNewUser] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<SignupVals | LoginVals>({
     resolver: zodResolver(isNewUser ? signupSchema : loginSchema),
     defaultValues: {
-      username: "",
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
     } as any,
   });
 
-  async function onSubmit(data: LoginFormValues | SignupFormValues) {
+  const toggleMode = () => {
+    form.reset();
+    form.clearErrors();
+    setIsNewUser(p => !p);
+  };
+
+  const onSubmit = async (vals: SignupVals | LoginVals) => {
     setIsLoading(true);
-
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    if (isNewUser) {
-      // Signup flow
-      const success = signup(data as SignupFormValues);
-      if (success) {
-        toast({
-          title: "Signup Successful",
-          description: "You can now log in with your credentials.",
+    try {
+      if (isNewUser) {
+        const { fullName, email, password } = vals as SignupVals;
+        const res = await fetch("/api/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: fullName, email, password }),
         });
-        setIsNewUser(false);
-        form.reset();
+
+        if (!res.ok) throw new Error("Signup failed");
+
+        toast({ title: "Account created ✅", description: "Please log in now." });
+        toggleMode(); // switch back to login
       } else {
-        form.setError("email", { type: "manual", message: "Email already exists." });
-        toast({
-          title: "Signup Failed",
-          description: "Email is already registered.",
-          variant: "destructive",
+        const { email, password } = vals as LoginVals;
+        const res = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
         });
-      }
-    } else {
-      // Login flow
-      const success = login((data as LoginFormValues).email, (data as LoginFormValues).password);
-      if (success) {
-        toast({
-          title: "Login Successful",
-          description: "Redirecting to dashboard...",
-        });
+
+        if (res?.error) throw new Error(res.error);
+        toast({ title: "Login successful" });
         router.push("/dashboard");
-      } else {
-        form.setError("email", { type: "manual", message: "Invalid email or password." });
-        form.setError("password", { type: "manual", message: "Invalid email or password." });
-        toast({
-          title: "Login Failed",
-          description: "Please check your credentials and try again.",
-          variant: "destructive",
-        });
       }
-    }
-    setIsLoading(false);
+    } catch (err: any) {
+  const message = err?.message ?? "Something went wrong";
+
+  if (message.includes("User already exists")) {
+    toast({
+      title: "Email already in use",
+      description: "Try logging in instead.",
+      variant: "destructive",
+    });
+    return; // don't switch back to login
   }
+
+  toast({
+    title: "Auth error",
+    description: message,
+    variant: "destructive",
+  });
+
+  // Automatically switch to sign-up if the user was not found
+  if (!isNewUser && message.includes("No user")) setIsNewUser(true);
+}
+ finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card className="shadow-xl max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-2xl font-headline">{isNewUser ? "Sign Up" : "Sign In"}</CardTitle>
+        <CardTitle className="text-2xl font-headline">
+          {isNewUser ? "Sign Up" : "Sign In"}
+        </CardTitle>
         <CardDescription>
           {isNewUser
-            ? "Create your account with your college email."
-            : "Enter your college email to continue."}
+            ? "Create an account with your college email."
+            : "Log in with your college email."}
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Username field only for new users */}
             {isNewUser && (
               <FormField
                 control={form.control}
-                name="username"
+                name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Full Name</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input {...field} placeholder="Your username" className="pl-10" disabled={isLoading} />
+                        <UserIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input {...field} placeholder="Full Name" className="pl-10" disabled={isLoading} />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -144,20 +163,19 @@ export function LoginForm() {
               />
             )}
 
-            {/* Email */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>College Email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
-                        type="email"
-                        placeholder="yourid@mitsgwl.ac.in"
                         {...field}
+                        type="email"
+                        placeholder="you@mitsgwl.ac.in"
                         className="pl-10"
                         disabled={isLoading}
                       />
@@ -168,7 +186,6 @@ export function LoginForm() {
               )}
             />
 
-            {/* Password */}
             <FormField
               control={form.control}
               name="password"
@@ -183,7 +200,6 @@ export function LoginForm() {
               )}
             />
 
-            {/* Confirm password only for new users */}
             {isNewUser && (
               <FormField
                 control={form.control}
@@ -200,22 +216,14 @@ export function LoginForm() {
               />
             )}
 
-            {/* Forgot password link only for existing users */}
-            {!isNewUser && (
-              <div className="text-right">
-                <button
-                  type="button"
-                  onClick={() => toast({ title: "Forgot Password", description: "Reset link sent!" })}
-                  className="text-sm text-blue-600 hover:underline"
-                  disabled={isLoading}
-                >
-                  Forgot Password?
-                </button>
-              </div>
-            )}
-
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : isNewUser ? "Sign Up" : "Login"}
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : isNewUser ? (
+                "Create Account"
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
         </Form>
@@ -224,30 +232,14 @@ export function LoginForm() {
           {isNewUser ? (
             <>
               Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  form.reset();
-                  setIsNewUser(false);
-                }}
-                disabled={isLoading}
-                className="text-blue-600 hover:underline"
-              >
+              <button onClick={toggleMode} className="text-primary hover:underline">
                 Sign In
               </button>
             </>
           ) : (
             <>
               New user?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  form.reset();
-                  setIsNewUser(true);
-                }}
-                disabled={isLoading}
-                className="text-blue-600 hover:underline"
-              >
+              <button onClick={toggleMode} className="text-primary hover:underline">
                 Sign Up
               </button>
             </>

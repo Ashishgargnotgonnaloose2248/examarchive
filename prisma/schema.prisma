@@ -1,0 +1,97 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id        String    @id @default(cuid())
+  name      String
+  papers    Paper[]
+  subjects  Subject[]
+}
+
+model Subject {
+  id           String      @id @default(cuid())
+  name         String
+  department   Department  @relation(fields: [departmentId], references: [id])
+  departmentId String
+  papers       Paper[]
+
+  @@map("subject")
+}
+
+model Paper {
+  id           String      @id @default(cuid())
+  title        String
+  fileUrl      String
+  fileType     String
+  fileName     String?
+  year         Int
+  semester     Int
+  department   Department  @relation(fields: [departmentId], references: [id])
+  departmentId String
+  subject      Subject     @relation(fields: [subjectId], references: [id])
+  subjectId    String
+  createdAt    DateTime    @default(now())
+}
+
+/* ────────────────────────────────────────────────
+   NEXTAUTH USER / SESSION / ACCOUNT TABLES
+   – stores user name + email (unique, required)
+   – works with @next-auth/prisma-adapter
+────────────────────────────────────────────────── */
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?   // optional full name
+  email          String    @unique
+  isAdmin        Boolean   @default(false)
+  emailVerified  DateTime?
+  image          String?
+  fullName       String?
+  accounts       Account[]
+  sessions       Session[]
+  password       String
+
+}
+
+model Account {
+  id                 String   @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

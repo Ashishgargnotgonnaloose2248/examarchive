@@ -2,26 +2,22 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMockAuth } from '@/hooks/useMockAuth';
+import { useMockAuth, MockAuthProvider } from '@/lib/useMockAuth'; // ⬅️ import provider
 import { AppHeader } from '@/components/shared/AppHeader';
 import { Loader2 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { isAuthenticated, isLoading } = useMockAuth();
+function AppLayoutContent({ children }: { children: React.ReactNode }) {
+  const { currentUser, isLoading } = useMockAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isLoading && !currentUser) {
       router.replace('/login');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [currentUser, isLoading, router]);
 
-  if (isLoading || !isAuthenticated) {
+  if (isLoading || !currentUser) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -37,5 +33,17 @@ export default function AppLayout({
       </main>
       <Toaster />
     </div>
+  );
+}
+
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <MockAuthProvider>
+      <AppLayoutContent>{children}</AppLayoutContent>
+    </MockAuthProvider>
   );
 }

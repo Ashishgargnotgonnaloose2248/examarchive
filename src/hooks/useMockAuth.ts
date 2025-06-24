@@ -1,33 +1,38 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+console.log("✅ Using simplified useMockAuth");
 
-const AUTH_KEY = "ExamArchiveAuth";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";  // ⚠️ Added for redirect support
+
+const AUTH_KEY   = "ExamArchiveAuth";
 const USER_DB_KEY = "ExamArchiveUsers";
+const ADMIN_EMAIL = "admin@mitsgwl.ac.in";
 
 type User = {
-  username: string;
+  fullName: string;
   email: string;
   password: string;
+  isAdmin?: boolean;
 };
 
 export function useMockAuth() {
+  const router = useRouter();                       // ⚠️ Init router for redirects
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  // Helper: get users from localStorage
-  function getUsers(): User[] {
+  /* ----------------------------- helpers ------------------------------ */
+  const getUsers = (): User[] => {
     if (typeof window === "undefined") return [];
     const usersJson = localStorage.getItem(USER_DB_KEY);
     return usersJson ? JSON.parse(usersJson) : [];
-  }
+  };
 
-  // Helper: save users to localStorage
-  function saveUsers(users: User[]) {
+  const saveUsers = (users: User[]) => {
     localStorage.setItem(USER_DB_KEY, JSON.stringify(users));
-  }
+  };
 
-  // On mount, check auth status & load user
+  /* -------------------------- bootstrapping --------------------------- */
   useEffect(() => {
     try {
       const authEmail = localStorage.getItem(AUTH_KEY);
@@ -37,7 +42,11 @@ export function useMockAuth() {
           (u) => u.email.toLowerCase() === authEmail.toLowerCase()
         );
         if (user) {
-          setCurrentUser(user);
+          const potentialAdminUser = {
+            ...user,
+            isAdmin: user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase(),
+          };
+          setCurrentUser(potentialAdminUser);
           setIsAuthenticated(true);
         }
       }
@@ -47,49 +56,64 @@ export function useMockAuth() {
     setIsLoading(false);
   }, []);
 
-  // Signup method
+  /* ----------------------------- signup ------------------------------ */
   const signup = useCallback(
-    (data: User): boolean => {
+    (data: { fullName: string; email: string; password: string }): boolean => {
       const users = getUsers();
       const exists = users.some(
         (u) => u.email.toLowerCase() === data.email.toLowerCase()
       );
-      if (exists) return false; // already registered
+      if (exists) return false;
 
-      users.push(data);
+      const newUser: User = {
+        fullName: data.fullName,
+        email:    data.email,
+        password: data.password,
+        isAdmin:  data.email.toLowerCase() === ADMIN_EMAIL.toLowerCase(),
+      };
+      users.push(newUser);
       saveUsers(users);
-      // Automatically login user on signup
+
       localStorage.setItem(AUTH_KEY, data.email);
-      setCurrentUser(data);
+      setCurrentUser(newUser);
       setIsAuthenticated(true);
       return true;
     },
     []
   );
 
-  // Login method (email + password)
-  const login = useCallback((email: string, password: string): boolean => {
-    const users = getUsers();
-    const user = users.find(
-      (u) =>
-        u.email.toLowerCase() === email.toLowerCase() && u.password === password
-    );
-    if (user) {
-      localStorage.setItem(AUTH_KEY, user.email);
-      setCurrentUser(user);
-      setIsAuthenticated(true);
-      return true;
-    }
-    return false;
-  }, []);
+  /* ------------------------------ login ------------------------------ */
+  const login = useCallback(
+    (email: string, password: string): boolean => {
+      const users = getUsers();
+      const user  = users.find(
+        (u) =>
+          u.email.toLowerCase() === email.toLowerCase() && u.password === password
+      );
+      if (user) {
+        const loggedInUser: User = {
+          ...user,
+          isAdmin: user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase(),
+        };
+        localStorage.setItem(AUTH_KEY, loggedInUser.email);
+        setCurrentUser(loggedInUser);
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
+    },
+    []
+  );
 
-  // Logout method
+  /* ----------------------------- logout ------------------------------ */
   const logout = useCallback(() => {
     localStorage.removeItem(AUTH_KEY);
     setCurrentUser(null);
     setIsAuthenticated(false);
-  }, []);
+    router.push("/login");          // ⚠️ Redirect after logout
+  }, [router]);
 
+  /* ----------------------------- exports ----------------------------- */
   return {
     isAuthenticated,
     isLoading,

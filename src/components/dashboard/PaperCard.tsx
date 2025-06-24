@@ -1,9 +1,10 @@
+
 "use client";
 
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DownloadCloud, FileText, FileType2, FileQuestion } from "lucide-react";
+import { DownloadCloud, FileText, FileType2, FileQuestion, CalendarDays } from "lucide-react"; // Added CalendarDays
 import type { Paper } from '@/types';
 import { DEPARTMENTS, SUBJECTS } from '@/lib/constants';
 import { Badge } from '@/components/ui/badge';
@@ -32,13 +33,11 @@ export function PaperCard({ paper }: PaperCardProps) {
   const { toast } = useToast();
 
   const handleDownload = () => {
-    // In a real app, this would trigger a download.
-    // For now, it's a placeholder.
     toast({
       title: "Download Initiated",
-      description: `Downloading ${paper.title}... (Placeholder)`,
+      description: `Downloading ${paper.title}...`,
     });
-    window.open(paper.fileUrl, '_blank'); // Simulate opening file
+    window.open(paper.fileUrl, '_blank');
   };
 
   return (
@@ -58,12 +57,19 @@ export function PaperCard({ paper }: PaperCardProps) {
         <div className="flex items-center text-sm text-muted-foreground pt-1">
           {getFileIcon(paper.fileType)}
           <span className="ml-1.5 uppercase">{paper.fileType}</span>
+          {paper.year && (
+            <>
+              <span className="mx-1.5">·</span>
+              <CalendarDays className="h-4 w-4 mr-1" />
+              <span>{paper.year}</span>
+            </>
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex-grow space-y-2 text-sm">
         <p><strong className="text-foreground">Department:</strong> {department}</p>
         <p><strong className="text-foreground">Subject:</strong> {subject}</p>
-        <p><strong className="text-foreground">Year:</strong> {paper.year}</p>
+        <p><strong className="text-foreground">Semester:</strong> {paper.semester}</p>
       </CardContent>
       <CardFooter>
         <Button onClick={handleDownload} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
