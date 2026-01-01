@@ -133,8 +133,7 @@ export default function DashboardPage() {
           onFilterChange={handleFilterChange}
           currentFilters={filters}
         />
-
-        {/* list */}
+        {/* paper list */}
         <PaperList papers={filteredPapers} />
       </main>
     </div>
