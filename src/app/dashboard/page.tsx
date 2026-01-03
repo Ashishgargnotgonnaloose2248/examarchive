@@ -125,7 +125,7 @@ export default function DashboardPage() {
 
         <Separator />
 
-        {/* filters */}
+        {/* paper filters */}
         <PaperFilters
           departments={DEPARTMENTS}
           subjects={subjects}
