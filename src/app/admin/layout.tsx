@@ -15,7 +15,7 @@ import {
 import { LayoutDashboard } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 
-/* ────────────  Small logo component  ──────────── */
+/* ────────────  Small logo components  ──────────── */
 const CollegeLogo = () => (
   <Image
     src="/MITS LOGO PNG.png"
