@@ -27,7 +27,7 @@ export default function AddSubjectPage() {
   const [subjectId, setSubjectId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch departments from backend
+  // Fetch departments from backend server
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
