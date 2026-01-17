@@ -91,7 +91,7 @@ console.log({ paperTitle, selectedDepartment, selectedSubject, selectedYear, sel
         description: `Paper "${data.title}" uploaded successfully.`,
       });
 
-      // Reset form
+      // Reset forms
       setPaperTitle("");
       setSelectedDepartment(undefined);
       setSelectedSubject(undefined);
