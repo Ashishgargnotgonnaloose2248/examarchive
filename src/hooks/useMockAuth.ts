@@ -21,7 +21,7 @@ export function useMockAuth() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  /* ----------------------------- helpers ------------------------------ */
+  /* ----------------------------- helper ------------------------------ */
   const getUsers = (): User[] => {
     if (typeof window === "undefined") return [];
     const usersJson = localStorage.getItem(USER_DB_KEY);
