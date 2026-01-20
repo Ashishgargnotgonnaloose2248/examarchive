@@ -56,7 +56,7 @@ export function useMockAuth() {
     setIsLoading(false);
   }, []);
 
-  /* ----------------------------- signup ------------------------------ */
+  /* ----------------------------- signup logic------------------------------ */
   const signup = useCallback(
     (data: { fullName: string; email: string; password: string }): boolean => {
       const users = getUsers();
