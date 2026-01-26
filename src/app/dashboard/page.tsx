@@ -40,7 +40,7 @@ export default function DashboardPage() {
     if (!isLoading && !currentUser) router.push("/login");
   }, [isLoading, currentUser, router]);
 
-  /* -------- load subject & papers -------- */
+  /* -------- load subjects & papers -------- */
   useEffect(() => {
     const load = async () => {
       try {
