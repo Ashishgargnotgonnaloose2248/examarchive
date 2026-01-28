@@ -35,7 +35,7 @@ export default function DashboardPage() {
     subject: undefined,
   });
 
-  /* -------- authentication guard -------- */
+  /* -------- authentication guards -------- */
   useEffect(() => {
     if (!isLoading && !currentUser) router.push("/login");
   }, [isLoading, currentUser, router]);
