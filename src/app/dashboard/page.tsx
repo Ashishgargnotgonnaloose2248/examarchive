@@ -59,7 +59,7 @@ export default function DashboardPage() {
     load();
   }, []);
 
-  /* -------- filter -------- */
+  /* -------- filters -------- */
   const handleFilterChange = useCallback((f: Filters) => setFilters(f), []);
 
   const filteredPapers = useMemo(() => {
