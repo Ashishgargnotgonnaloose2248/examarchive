@@ -71,7 +71,7 @@ export default function DashboardPage() {
     });
   }, [papers, filters]);
 
-  /* -------- loading screen -------- */
+  /* -------- loading screens -------- */
   if (isLoading || !currentUser) {
     return (
       <div className="flex h-screen items-center justify-center">
