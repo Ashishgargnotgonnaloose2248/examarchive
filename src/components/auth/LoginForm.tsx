@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
-/* ─────────────────── validation ─────────────────── */
+/* ─────────────────── validations ─────────────────── */
 const loginSchema = z.object({
   email: z
     .string()
