@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { PaperFilters } from "@/components/dashboard/PaperFilters";
 import { PaperList } from "@/components/dashboard/PaperList";
-import { DEPARTMENTS, SEMESTERS } from "@/lib/constants"; // ⬅️ no PAPERS import now
+import { DEPARTMENTS, SEMESTERS } from "@/lib/constants"; // ⬅️ no PAPER import now
 import type { Filters, Subject, Paper } from "@/types";
 
 import { Separator } from "@/components/ui/separator";
