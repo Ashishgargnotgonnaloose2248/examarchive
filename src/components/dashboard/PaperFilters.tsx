@@ -72,7 +72,7 @@ export function PaperFilters({
     <div className="p-6 bg-card rounded-lg shadow space-y-6 border">
       <h2 className="text-xl font-semibold text-foreground font-headline">Filter Papers</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-        {/* Department Select */}
+        {/* Departments Select */}
         <div>
           <Label htmlFor="department-select" className="flex items-center mb-2">
             <Building className="h-4 w-4 mr-2 text-primary" />
