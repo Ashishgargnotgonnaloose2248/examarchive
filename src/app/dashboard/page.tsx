@@ -26,7 +26,7 @@ export default function DashboardPage() {
   const isLoading = status === "loading";
   const currentUser = session?.user;
 
-  /* --------------- stat ---------------- */
+  /* --------------- states ---------------- */
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);        // ⬅️ new
   const [filters, setFilters] = useState<Filters>({
